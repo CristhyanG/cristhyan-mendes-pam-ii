@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import  NavButton from '../components/NavButton'
 
 export default function Index() {
   return (
@@ -9,7 +10,11 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <NavButton label={"Botão que te redireciona"} onPress={alert( "giovanni viadão")}/>
+        
+     
     </View>
   );
+
+ // const index = ({}) => é uma função resumida
 }
