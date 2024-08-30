@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 import  NavButton from '../components/NavButton'
+import {Link} from 'expo-router'
 
 export default function Index() {
   return (
@@ -10,8 +11,9 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <NavButton label={"Botão que te redireciona"} onPress={alert( "giovanni viadão")}/>
-        
+      <Link href={"/cadastro"}>
+      <NavButton label={"Cadastrar"}/>
+      </Link>
      
     </View>
   );
