@@ -1,12 +1,13 @@
-import { Text, View, StyleSheet, FlatList } from "react-native";
-import  NavButton from '../components/NavButton'
+import * as react from  'react';
+import { Text, View, StyleSheet } from "react-native";
+import  NavButton from '../components/NavButton';
+import SearchBar from '../components/searchBar';
 import {Link} from 'expo-router'
-
 export default function Index() {
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       <View style={styles.barraPesquisa}> 
-      {/* barra de pesquisa*/}
+        
       </View>
 
       <View style={styles.buttonLink}> 
