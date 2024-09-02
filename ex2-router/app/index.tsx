@@ -1,13 +1,16 @@
 import * as react from  'react';
 import { Text, View, StyleSheet } from "react-native";
 import  NavButton from '../components/NavButton';
-import SearchBar from '../components/searchBar';
+import SearchBar from '../components/SearchBar';
 import {Link} from 'expo-router'
+
 export default function Index() {
+ 
   return (
     <View style={styles.container}>
+      
       <View style={styles.barraPesquisa}> 
-        
+        <SearchBar/>
       </View>
 
       <View style={styles.buttonLink}> 
@@ -24,9 +27,10 @@ export default function Index() {
 const styles = StyleSheet.create 
 ({
   container: {
+    marginTop: 20,
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection:'row',
   },
   barraPesquisa: {
 
