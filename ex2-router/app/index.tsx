@@ -15,8 +15,7 @@ export default function Index() {
 
       <View style={styles.buttonLink}> 
         <Link href={"login/cadastro"}>
-          <NavButton label={"Cadastrar"}/>
-        </Link>
+          <NavButton label={"Cadastrar"} />        </Link>
       </View>
 
     </View>

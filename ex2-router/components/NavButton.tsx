@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#2b2bff',
         borderRadius: 10,
+        
     },
     btnLabel:{
         textAlign: 'center',
