@@ -4,12 +4,21 @@ import { Link } from 'expo-router'
 import { useState } from "react";
 import { useForm, Controller} from 'react-hook-form';
 import React from 'react';
+import {yupResolver} from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const schema = yup.object ({
+  email: yup.string().email("email inválido").required("informe seu email"),
+  senha: yup.string().required("digite sua senha")
+})
 
 export default function cadastro() {
-  const {control, handleSubmit, formState: {errors} } = useForm ({})
+  const {control, handleSubmit, formState: {errors} } = useForm ({ /* é possível usar o defaultValues dentro de ({}) para colocar alguumas definições de valores*/
+    resolver: yupResolver(schema),
+  }) 
 
   function handleSignIn(data){
-    console.log(data);
+    alert(data);
   }
   
   return (
@@ -23,34 +32,39 @@ export default function cadastro() {
         <Text style={styles.cadastroTiltle}>Cadastrar</Text>
         
         <Text >Email</Text>      
-       
-       <Controller
-        control={control} //user form => linha 9
-        name="email" //nome do campo
-        render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
-          <TextInput
-          style={styles.login}
-          placeholder="   Digite seu Email"
-          onChangeText={onChange} //troca os use state por prop da renderização
-          onBlur={onBlur} //chamado quando o text input é trocado
-          defaultValue={value} //troca valor de estado por valor de propriedade
-          keyboardType="email-address"
-          />
-        )}/>
-
-        <Controller
-        control={control} //user form => linha 9
-        name="senha" //nome do campo
-        render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
-          <TextInput
-          style={styles.login}
-          placeholder="   Digite sua Senha"
-          onChangeText={onChange} //troca os use state por prop da renderização
-          onBlur={onBlur} //chamado quando o text input é trocado
-          defaultValue={value} //troca valor de estado por valor de propriedade
-          keyboardType="email-address"
+        <Controller //FAZER UM COMPONENTE CONTROLLER
+          control={control} //user form => linha 9
+          name="email" //nome do campo
+          render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
+            <TextInput
+            style={styles.login}
+            placeholder="   Digite seu Email"
+            onChangeText={onChange} //troca os use state por prop da renderização
+            onBlur={onBlur} //chamado quando o text input é trocado
+            defaultValue={value} //troca valor de estado por valor de propriedade
+            keyboardType="email-address"
+            />
+          )}
         />
-        )}/>
+        {errors.email && <Text style={styles.labelErrors}> {errors.email?.message} </Text>}
+        
+        <Text >Senha</Text>
+        <Controller
+          control={control} //user form => linha 9
+          name="senha" //nome do campo
+          render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
+            <TextInput
+            style={styles.login}
+            placeholder="   Digite sua Senha"
+            onChangeText={onChange} //troca os use state por prop da renderização
+            onBlur={onBlur} //chamado quando o text input é trocado
+            defaultValue={value} //troca valor de estado por valor de propriedade
+            keyboardType="default"
+            secureTextEntry={true}
+          />
+          )}
+        />
+        {errors.senha && <Text style={styles.labelErrors}> {errors.senha?.message} </Text>}
 
 
        
@@ -90,10 +104,10 @@ const styles = StyleSheet.create({
     fontWeight: 'light',
     justifyContent: 'center',
     borderColor: '#023',
-    borderStyle: 'solid',
+    borderStyle: "solid",
     backgroundColor:'#c7c7c7',
     width: 300,
-    color:'#a1a1a1',
+    color:'#000',
     borderRadius: 10,
     marginLeft: 20,
   },
@@ -109,6 +123,11 @@ const styles = StyleSheet.create({
   },
   cadastroTiltle:{
     fontSize: 20,
+  },
+  labelErrors: {
+    alignSelf: 'center',
+    color: '#ff375b',
+    margin: 8,
   }
  
 });
