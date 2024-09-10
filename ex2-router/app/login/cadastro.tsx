@@ -18,7 +18,7 @@ export default function cadastro() {
   }) 
 
   function handleSignIn(data){
-    alert(data);
+    alert(data.senha);
   }
   
   return (
@@ -37,7 +37,7 @@ export default function cadastro() {
           name="email" //nome do campo
           render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
             <TextInput
-            style={styles.login}
+            style={styles.input}
             placeholder="   Digite seu Email"
             onChangeText={onChange} //troca os use state por prop da renderização
             onBlur={onBlur} //chamado quando o text input é trocado
@@ -54,15 +54,14 @@ export default function cadastro() {
           name="senha" //nome do campo
           render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
             <TextInput
-            style={styles.login}
+            style={styles.input}
             placeholder="   Digite sua Senha"
             onChangeText={onChange} //troca os use state por prop da renderização
             onBlur={onBlur} //chamado quando o text input é trocado
             defaultValue={value} //troca valor de estado por valor de propriedade
             keyboardType="default"
             secureTextEntry={true}
-          />
-          )}
+          /> )}
         />
         {errors.senha && <Text style={styles.labelErrors}> {errors.senha?.message} </Text>}
 
@@ -72,9 +71,9 @@ export default function cadastro() {
         <View style={styles.btns}>
           
           <NavButton
-          label={'Cadastrar'}
-          style={styles.btnCadastro}
-          onPress={handleSubmit(handleSignIn)} //invés de mudança de estado chama esta função handleSign com status handleSubmit
+            label={'Cadastrar'}
+            style={styles.btnCadastro}
+            onPress={handleSubmit(handleSignIn)} //invés de mudança de estado chama esta função handleSign com status handleSubmit
           />
 
 
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'center'
   },
-  login: {
+  input: {
     height:30,
     fontWeight: 'light',
     justifyContent: 'center',
