@@ -1,68 +1,75 @@
-import { Text, View, SafeAreaView, StyleSheet, TextInput } from "react-native";
+import { Text, View, SafeAreaView, StyleSheet, TextInput  } from "react-native";
 import NavButton from '../../components/NavButton'
 import { Link } from 'expo-router'
 import { useState } from "react";
-import React = require("react");
+import { useForm, Controller} from 'react-hook-form';
+import React from 'react';
 
 export default function cadastro() {
-  const [text, setText] = React.useState(null);
-  const [password, setPassword] = React.useState(null)
-  const [Cpassword, setCPassword] = React.useState(null)
-  const [number, setNumber] = React.useState(null);
+  const {control, handleSubmit, formState: {errors} } = useForm ({})
+
+  function handleSignIn(data){
+    console.log(data);
+  }
+  
   return (
 
 
-
+    
     //const imgLike = uri: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficons%2Flike&psig=AOvVaw32NDZOfBcwBezu1fnVTvY5&ust=1725060942704000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMiXmPeum4gDFQAAAAAdAAAAABAT';
     <SafeAreaView style={styles.body}>
       <View style={styles.container}>
+       
         <Text style={styles.cadastroTiltle}>Cadastrar</Text>
-        <Text >Email</Text>
-              
-        <TextInput
+        
+        <Text >Email</Text>      
+       
+       <Controller
+        control={control} //user form => linha 9
+        name="email" //nome do campo
+        render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
+          <TextInput
           style={styles.login}
           placeholder="   Digite seu Email"
-          onChangeText={newText => setText(newText)}
-          defaultValue={text}
+          onChangeText={onChange} //troca os use state por prop da renderização
+          onBlur={onBlur} //chamado quando o text input é trocado
+          defaultValue={value} //troca valor de estado por valor de propriedade
+          keyboardType="email-address"
+          />
+        )}/>
+
+        <Controller
+        control={control} //user form => linha 9
+        name="senha" //nome do campo
+        render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
+          <TextInput
+          style={styles.login}
+          placeholder="   Digite sua Senha"
+          onChangeText={onChange} //troca os use state por prop da renderização
+          onBlur={onBlur} //chamado quando o text input é trocado
+          defaultValue={value} //troca valor de estado por valor de propriedade
           keyboardType="email-address"
         />
-        
+        )}/>
 
-        <Text>Senha</Text>
-        <TextInput
-          style={styles.login}
-          placeholder="   Digite sua senha"
-          onChangeText={newPassword => setPassword(newPassword)}
-          defaultValue={password}
-          keyboardType="visible-password"
-          secureTextEntry={true}
 
-        />
-       <Text>Confirme sua Senha</Text>
-        <TextInput
-          style={styles.login}
-          placeholder="   Confirme sua senha"
-          onChangeCPassword={newCPassword => setCPassword(newCPassword)}
-          defaultValue={Cpassword}
-          keyboardType="visible-password"
-          secureTextEntry={true}
-
-        />
-        
+       
+       
         <View style={styles.btns}>
+          
+          <NavButton
+          label={'Cadastrar'}
+          style={styles.btnCadastro}
+          onPress={handleSubmit(handleSignIn)} //invés de mudança de estado chama esta função handleSign com status handleSubmit
+          />
 
-        <Link href={'/'}>
-        <NavButton label={'Cadastrar'} style={styles.btnCadastro} />
-        </Link>
 
-        <Link href={'/'}>
-        <NavButton label={'Voltar'}></NavButton>
-        </Link>
+          <Link href={'/'}>
+            <NavButton label={'Voltar'}></NavButton>
+          </Link>
     
         </View>
-
       </View>
-
     </SafeAreaView>
   );
 }
