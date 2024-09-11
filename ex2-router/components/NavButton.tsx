@@ -1,13 +1,16 @@
 import { View, Pressable, Text, StyleSheet} from "react-native";
+import {Link} from 'expo-router'
 
-export default function NavButton({ label, onPress}){
+export default function NavButton({ caminho, label, onPress}){
     return(
         <View style={styles.btnContainer}>
-            <Pressable  onPress={onPress}>
-                <Text style={styles.btnLabel}>
-                {label}
-                </Text>
-            </Pressable>
+            <Link href={caminho}>
+                <Pressable  onPress={onPress}>
+                    <Text style={styles.btnLabel}>
+                    {label}
+                    </Text>
+                </Pressable>
+            </Link>
         </View>
     );
 }
