@@ -18,7 +18,7 @@ export default function cadastro() {
   }) 
 
   function handleSignIn(data){
-    alert(data.senha);
+      alert(data);
   }
   
   return (
@@ -71,15 +71,17 @@ export default function cadastro() {
         <View style={styles.btns}>
           
           <NavButton
+            caminho={'/'}
             label={'Cadastrar'}
             style={styles.btnCadastro}
             onPress={handleSubmit(handleSignIn)} //invés de mudança de estado chama esta função handleSign com status handleSubmit
           />
 
-
-          <Link href={'/'}>
-            <NavButton label={'Voltar'}></NavButton>
-          </Link>
+          <NavButton
+            onPress={()=>alert('Deseja retornar ao menu principal?')} 
+            caminho={'/'}
+            label={'Voltar'}
+          />
     
         </View>
       </View>
