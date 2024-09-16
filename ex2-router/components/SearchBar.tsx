@@ -11,19 +11,21 @@ export default function SearchBar () {
         <View style={styles.container} >
 
                 <Pressable style={styles.iconContainer}>
-                <Icon 
-                name='search' 
-                style={styles.iconButton}
-                size={20}
-                />
+                    <Icon 
+                        name='search' 
+                        style={styles.iconButton}
+                        size={20}
+                    />
                 </Pressable>
 
                 <TextInput 
-                style={styles.input}
-                placeholder="Pesquisar"
-                onChangeText={newText => setText(newText)}
-                defaultValue={text}
-                    />
+                    style={styles.input}
+                    placeholder="Pesquisar"
+                    onChangeText={newText => setText(newText)}
+                    value={text || ''}
+                />
+
+
         </View>
     );
 };
