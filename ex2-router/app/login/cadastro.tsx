@@ -7,7 +7,7 @@ export default function cadastro() {
     return (
       <SafeAreaView>
         <View>
-          <Formulario tipo="Cadastro"/>
+          <Formulario tipo="NovoCadastro"/>
         </View>
       </SafeAreaView>
     )
