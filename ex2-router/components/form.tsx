@@ -5,11 +5,40 @@ import NavButton from '../components/NavButton'
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
+import { useState, useEffect } from "react";
+import firebase from 'firebase/app';
+import{ getDocs, getFirestore, collection, addDoc } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBH9c1JNyktUuTwn9D58byBU1zJwFXfpqQ",
+  authDomain: "ex--routerdb.firebaseapp.com",
+  projectId: "ex--routerdb"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const userCollectionRef = collection(db, "Usuários");
+  
 
 
+ 
 
 export default function Formulario ({tipo}) {
-    
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const data = await getDocs(userCollectionRef);
+        setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      } catch (error) {
+        console.error("Erro ao obter os documentos: ", error);
+      }
+    };
+
+    getUsers();
+  }, []); // Executa apenas uma vez ao montar o componente
     if(tipo == "Cadastro") {
         
         const schema = yup.object ({
@@ -21,8 +50,19 @@ export default function Formulario ({tipo}) {
             resolver: yupResolver(schema),
         }) 
         
-        function handleSignIn(data){
-            alert(data);
+        async function handleSignIn(data){
+          try{
+            const {email, senha} = data;
+            const user = await addDoc(userCollectionRef, {
+              usEmail: email,
+              usSenha: senha,
+            });
+            console.log("usuario cadastrado com id:", user.id)
+          } catch(error){
+            console.error("Erro ao cadastrar usuário", error)
+          }
+          
+            
         }
         
         return (
@@ -82,6 +122,22 @@ export default function Formulario ({tipo}) {
                         label={'Voltar'}
                     />
             
+
+
+
+
+                 {/* <View>
+                    <ul>
+                      {users.map((user)=> {
+                        return(
+                          <div key={user.id}>
+                          <li>{user.usEmail}</li>
+                          </div>
+
+                        );
+    })}
+                    </ul>
+                  </View> código que mostra dados do banco*/}
                 </View>
             </View>
             )
