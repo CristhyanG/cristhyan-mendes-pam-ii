@@ -26,7 +26,9 @@ const userCollectionRef = collection(db, "Usuários");
  
 
 export default function Formulario ({tipo}) {
+  
   const [users, setUsers] = useState([]);
+  
   useEffect(() => {
     const getUsers = async () => {
       try {
