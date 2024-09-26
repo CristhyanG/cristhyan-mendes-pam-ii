@@ -1,46 +1,52 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react'
 import { useForm, Controller} from 'react-hook-form';
-import { Text, View, SafeAreaView, StyleSheet, TextInput  } from "react-native";
+import { Text, View, StyleSheet, TextInput  } from "react-native";
 import NavButton from '../components/NavButton'
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import {addUser, getAllUsers} from '../data/FireBase';
 
-import { useState, useEffect } from "react";
-import firebase from 'firebase/app';
-import{ getDocs, getFirestore, collection, addDoc } from 'firebase/firestore';
-import { initializeApp } from "firebase/app";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBH9c1JNyktUuTwn9D58byBU1zJwFXfpqQ",
-  authDomain: "ex--routerdb.firebaseapp.com",
-  projectId: "ex--routerdb"
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBH9c1JNyktUuTwn9D58byBU1zJwFXfpqQ",
+//   authDomain: "ex--routerdb.firebaseapp.com",
+//   projectId: "ex--routerdb"
 
-};
+// };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const userCollectionRef = collection(db, "Usuários");
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app);
+// const userCollectionRef = collection(db, "Usuários");
   
-
-
- 
 
 export default function Formulario ({tipo}) {
   
   const [users, setUsers] = useState([]);
   
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const data = await getDocs(userCollectionRef);
-        setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    // const getUsers = async () => {
+    //   try {
+    //     const data = await getDocs(userCollectionRef);
+    //     setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    //   } catch (error) {
+    //     console.error("Erro ao obter os documentos: ", error);
+    //   }
+    // };
+
+    // getUsers();
+
+    const fetchUsers = async() => {
+      try{
+        const userData = await getAllUsers();
+        setUsers(userData);
       } catch (error) {
-        console.error("Erro ao obter os documentos: ", error);
+        console.error(error.message)
       }
     };
 
-    getUsers();
+    fetchUsers();
   }, []); // Executa apenas uma vez ao montar o componente
+
     if(tipo == "Cadastro") {
         
         const schema = yup.object ({
@@ -52,20 +58,26 @@ export default function Formulario ({tipo}) {
             resolver: yupResolver(schema),
         }) 
         
-        async function handleSignIn(data){
+        const handleSignIn = async (data) => {
+          // try{
+          //   const {email, senha} = data;
+          //   const user = await addDoc(userCollectionRef, {
+          //     usEmail: email,
+          //     usSenha: senha,
+          //   });
+          //   console.log("usuario cadastrado com id:", user.id)
+          // } catch(error){
+          //   console.error("Erro ao cadastrar usuário", error)
+          // }
+
           try{
             const {email, senha} = data;
-            const user = await addDoc(userCollectionRef, {
-              usEmail: email,
-              usSenha: senha,
-            });
-            console.log("usuario cadastrado com id:", user.id)
-          } catch(error){
-            console.error("Erro ao cadastrar usuário", error)
-          }
-          
-            
-        }
+            const userId = await addUser ({usEmail: email, usSenha: senha});
+            console.log("Usuário cadastrado com ID:", userId);
+          } catch (error) {
+            console.error("Erro ao cadastrar usuário", error.message)
+          }  
+        };
         
         return (
             <View style={styles.container}>
@@ -74,35 +86,36 @@ export default function Formulario ({tipo}) {
                 
                 <Text >Email</Text>      
                 <Controller //FAZER UM COMPONENTE CONTROLLER
-                control={control} //user form => linha 9
-                name="email" //nome do campo
-                render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
+                  control={control} //user form => linha 9
+                  name="email" //nome do campo
+                  render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
                     <TextInput
-                    style={styles.input}
-                    placeholder="   Digite seu Email"
-                    onChangeText={onChange} //troca os use state por prop da renderização
-                    onBlur={onBlur} //chamado quando o text input é trocado
-                    value={value || ''} //troca valor de estado por valor de propriedade
-                    keyboardType="email-address"
+                      style={styles.input}
+                      placeholder="   Digite seu Email"
+                      onChangeText={onChange} //troca os use state por prop da renderização
+                      onBlur={onBlur} //chamado quando o text input é trocado
+                      value={value || ''} //troca valor de estado por valor de propriedade
+                      keyboardType="email-address"
                     />
-                )}
+                  )}
                 />
                 {errors.email && <Text style={styles.labelErrors}> {errors.email?.message} </Text>}
                 
                 <Text >Senha</Text>
                 <Controller
-                control={control} //user form => linha 9
-                name="senha" //nome do campo
-                render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
+                  control={control} //user form => linha 9
+                  name="senha" //nome do campo
+                  render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
                     <TextInput
-                    style={styles.input}
-                    placeholder="   Digite sua Senha"
-                    onChangeText={onChange} //troca os use state por prop da renderização
-                    onBlur={onBlur} //chamado quando o text input é trocado
-                    value={value || ''} //troca valor de estado por valor de propriedade
-                    keyboardType="default"
-                    secureTextEntry={true}
-                /> )}
+                      style={styles.input}
+                      placeholder="   Digite sua Senha"
+                      onChangeText={onChange} //troca os use state por prop da renderização
+                      onBlur={onBlur} //chamado quando o text input é trocado
+                      value={value || ''} //troca valor de estado por valor de propriedade
+                      keyboardType="default"
+                      secureTextEntry={true}
+                    /> 
+                  )}
                 />
                 {errors.senha && <Text style={styles.labelErrors}> {errors.senha?.message} </Text>}
         
@@ -123,23 +136,7 @@ export default function Formulario ({tipo}) {
                         caminho={'/'}
                         label={'Voltar'}
                     />
-            
-
-
-
-
-                 {/* <View>
-                    <ul>
-                      {users.map((user)=> {
-                        return(
-                          <div key={user.id}>
-                          <li>{user.usEmail}</li>
-                          </div>
-
-                        );
-    })}
-                    </ul>
-                  </View> código que mostra dados do banco*/}
+        
                 </View>
             </View>
             )
