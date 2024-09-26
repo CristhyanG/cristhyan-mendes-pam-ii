@@ -32,6 +32,19 @@ export default function cadastro() {
           <Formulario tipo="NovoCadastro"/>
         </View>
        
+        {
+      /* <View>
+            <ul>
+              {users.map((user)=> {
+                return(
+                  <div key={user.id}>
+                  <li>{user.usEmail}</li>
+                  </div>
+                );
+              })}
+            </ul>
+      </View> código que mostra dados do banco*/
+      }
       
       </SafeAreaView>
     )
