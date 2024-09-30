@@ -1,10 +1,8 @@
-import { View, SafeAreaView, StyleSheet } from "react-native";
+import { View, SafeAreaView, StyleSheet, Text } from "react-native";
 import React from 'react';
 import Formulario from '../../components/form';
-import { useState, useEffect } from "react";
-import firebase from 'firebase/app';
-import{ getDocs, getFirestore, collection } from 'firebase/firestore';
-import { initializeApp } from "firebase/app";
+import { useLocalSearchParams } from "expo-router";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBH9c1JNyktUuTwn9D58byBU1zJwFXfpqQ",
@@ -18,7 +16,9 @@ const firebaseConfig = {
   
 
 export default function cadastro() {
-  
+  const tipoForm = useLocalSearchParams();
+  const tipoFormString = tipoForm?.tipoForm; 
+  console.log("tipo: ", tipoFormString)
   {/*useEffect(()=> {
     const getUsers = async () => {
       const data = await getDocs(userCollectionRef)
@@ -27,9 +27,13 @@ export default function cadastro() {
     getUsers();
   });*/}
     return (
+      
       <SafeAreaView>
+        
         <View>
-          <Formulario tipo="NovoCadastro"/>
+          
+          <Formulario tipo={tipoFormString}/>
+          
         </View>
        
         {

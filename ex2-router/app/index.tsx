@@ -16,10 +16,20 @@ export default function Index() {
         <View style={styles.buttonLink}> 
             <NavButton
               onPress={()=> {}} 
-              caminho={"login/cadastro"} 
-              label={"Login"} 
+              caminho={"login/cadastro?tipoForm=NovoCadastro"} 
+              label={"Cadastrar"} 
             />        
+            <NavButton
+            onPress={()=> {}}
+            caminho={"login/cadastro?tipoForm=Login"}
+            label={"Entrar"}
+            />
         </View>
+        <NavButton
+      onPress={()=> {}}
+      caminho={"login/cadastro?tipoForm=NovaVaga"}
+      label={"Publicar uma nova vaga"}
+        />
       </View>
 
     </View>
@@ -39,6 +49,8 @@ const styles = StyleSheet.create
 
   },
   buttonLink: {
-
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
 })

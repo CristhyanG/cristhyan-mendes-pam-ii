@@ -5,7 +5,7 @@ import NavButton from '../components/NavButton'
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {addUser, getAllUsers} from '../data/FireBase';
-
+import { useLocalSearchParams } from 'expo-router';
 
 // const firebaseConfig = {
 //   apiKey: "AIzaSyBH9c1JNyktUuTwn9D58byBU1zJwFXfpqQ",
@@ -47,7 +47,7 @@ export default function Formulario ({tipo}) {
     fetchUsers();
   }, []); // Executa apenas uma vez ao montar o componente
 
-    if(tipo == "Cadastro") {
+    if(tipo == "Login") {
         
         const schema = yup.object ({
             email: yup.string().email("email inválido").required("informe seu email"),
@@ -72,6 +72,7 @@ export default function Formulario ({tipo}) {
 
           try{
             const {email, senha} = data;
+            console.log("Dados recebidos no handleSignIn:", email, senha);
             const userId = await addUser ({usEmail: email, usSenha: senha});
             console.log("Usuário cadastrado com ID:", userId);
           } catch (error) {
@@ -82,7 +83,7 @@ export default function Formulario ({tipo}) {
         return (
             <View style={styles.container}>
                 
-                <Text style={styles.cadastroTiltle}>Cadastrar</Text>
+                <Text style={styles.cadastroTiltle}>Entrar</Text>
                 
                 <Text >Email</Text>      
                 <Controller //FAZER UM COMPONENTE CONTROLLER
@@ -126,7 +127,7 @@ export default function Formulario ({tipo}) {
                 
                     <NavButton
                         caminho={'/'}
-                        label={'Cadastrar'}
+                        label={'Login'}
                         style={styles.btnCadastro}
                         onPress={handleSubmit(handleSignIn)} //invés de mudança de estado chama esta função handleSign com status handleSubmit
                     />
@@ -161,8 +162,26 @@ export default function Formulario ({tipo}) {
             resolver: yupResolver(schema),
         }); 
         
-        function handleSignIn(data){
-              alert(data);
+        const handleSignIn = async (data) => {
+          // try{
+          //   const {email, senha} = data;
+          //   const user = await addDoc(userCollectionRef, {
+          //     usEmail: email,
+          //     usSenha: senha,
+          //   });
+          //   console.log("usuario cadastrado com id:", user.id)
+          // } catch(error){
+          //   console.error("Erro ao cadastrar usuário", error)
+          // }
+
+          try{
+            const {email, senha} = data;
+            console.log("Dados recebidos no handleSignIn:", email, senha);
+            const userId = await addUser ({usEmail: email, usSenha: senha});
+            console.log("Usuário cadastrado com ID:", userId);
+          } catch (error) {
+            console.error("Erro ao cadastrar usuário", error.message)
+          }  
         };
         
         return (
@@ -248,6 +267,93 @@ export default function Formulario ({tipo}) {
             </View>
             )
         
+    }else if(tipo === "NovaVaga"){
+      const schema = yup.object ({
+        cargo: yup
+          .string()          
+          .required("Adcione o cargo"),
+        empresa: yup
+          .string()
+          .required("Adcione a Empresa"),
+       
+        });
+      
+    const {control, handleSubmit, formState: {errors} } = useForm ({ /* é possível usar o defaultValues dentro de ({}) para colocar alguumas definições de valores*/
+        resolver: yupResolver(schema),
+    }); 
+    const handleSignIn = async (data) => {
+      
+
+      try{
+        const {email, senha} = data;
+        console.log("Dados recebidos no handleSignIn:", email, senha);
+        const userId = await addUser ({usEmail: email, usSenha: senha});
+        console.log("Usuário cadastrado com ID:", userId);
+      } catch (error) {
+        console.error("Erro ao cadastrar usuário", error.message)
+      }  
+    };
+      return (
+        <View style={styles.container}>
+            
+            <Text style={styles.cadastroTiltle}>Anuncie uma Vaga</Text>
+            
+            <Text >Cargo</Text>      
+            <Controller 
+              control={control} 
+              name="cargo" 
+              render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
+                <TextInput
+                  style={styles.input}
+                  placeholder="   Digite o cargo"
+                  onChangeText={onChange} //troca os use state por prop da renderização
+                  onBlur={onBlur} //chamado quando o text input é trocado
+                  value={value || ''} //troca valor de estado por valor de propriedade
+                  keyboardType="default"
+                />
+              )}
+            />
+            {errors.cargo && <Text style={styles.labelErrors}> {errors.email?.message} </Text>}
+            
+            <Text >Empresa</Text>
+            <Controller
+              control={control} //user form => linha 9
+              name="empresa" //nome do campo
+              render={({ field: {onChange, onBlur, value} }) => ( //render = renderizar / passa também propriedaes dessa função criada
+                <TextInput
+                  style={styles.input}
+                  placeholder="   Nome da empresa"
+                  onChangeText={onChange} //troca os use state por prop da renderização
+                  onBlur={onBlur} //chamado quando o text input é trocado
+                  value={value || ''} //troca valor de estado por valor de propriedade
+                  keyboardType="default"
+                  secureTextEntry={true}
+                /> 
+              )}
+            />
+            {errors.empresa && <Text style={styles.labelErrors}> {errors.senha?.message} </Text>}
+    
+    
+            
+            
+            <View style={styles.btns}>
+            
+                <NavButton
+                    caminho={'/'}
+                    label={'Login'}
+                    style={styles.btnCadastro}
+                    onPress={handleSubmit(handleSignIn)} //invés de mudança de estado chama esta função handleSign com status handleSubmit
+                />
+        
+                <NavButton
+                    onPress={()=>alert('Deseja retornar ao menu principal?')} 
+                    caminho={'/'}
+                    label={'Voltar'}
+                />
+    
+            </View>
+        </View>
+        )
     }
 } 
 
@@ -258,6 +364,7 @@ const styles = StyleSheet.create({
     },
     container:{
       flex: 1,
+      flexDirection: 'column',
       alignItems: 'center',
       padding: 10,
       justifyContent: 'center'
@@ -272,13 +379,12 @@ const styles = StyleSheet.create({
       width: 300,
       color:'#000',
       borderRadius: 10,
-      marginLeft: 20,
     },
     btns:{
       padding: 50,
       flexDirection:'row',
-      justifyContent: 'space-around',
-      width: 480,
+      justifyContent: 'space-between',
+      width: 400,
   
     },
     btnCadastro:{
